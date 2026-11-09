@@ -182,7 +182,7 @@ async function clean() {
     : "File langsung dihapus permanen dan tidak bisa dipulihkan.";
   const list = picked.map((item) => `• ${item.label} (${formatBytes(item.bytes)})`).join("\n");
   if (!(await confirmDelete(`Bersihkan ${total}?`, `${list}\n\n${where}`, "Bersihkan"))) return;
-  cleaning = true;
+  cleaning = store.cleaning = true;
   notify();
   try {
     const { report, state } = await invoke("clean", { ids });
@@ -195,7 +195,7 @@ async function clean() {
   } catch (error) {
     note = `Pembersihan gagal: ${error}`;
   }
-  cleaning = false;
+  cleaning = store.cleaning = false;
   await refreshDrives();
   await scan();
 }

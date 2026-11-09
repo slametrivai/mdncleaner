@@ -1,7 +1,7 @@
 // App shell: window controls, sidebar navigation and shared panels.
 
 import { invoke, appWindow, getVersion } from "./js/api.js";
-import { $, icon, toast } from "./js/dom.js";
+import { $, icon } from "./js/dom.js";
 import { formatGb } from "./js/format.js";
 import { store, subscribe, setApp, refreshDrives, refreshLocation, systemDrive } from "./js/store.js";
 import { cleanerView, scan as scanPc } from "./js/views/cleaner.js";
@@ -12,6 +12,7 @@ import { googleDriveView, icloudDriveView } from "./js/views/cloud.js";
 import { initAbout } from "./js/views/about.js";
 import { settingsView } from "./js/views/settings.js";
 import { startAnalytics, track } from "./js/analytics.js";
+import { initUpdates, checkForUpdates, openModal as openUpdate } from "./js/update.js";
 
 const VIEWS = [cleanerView, analysisView, historyView, pcView, googleDriveView, icloudDriveView, settingsView];
 let current = null;
@@ -66,21 +67,13 @@ function applyTheme() {
   document.documentElement.dataset.theme = store.app?.settings?.theme ?? "light";
 }
 
-async function checkUpdates() {
-  try {
-    await invoke("check_updates");
-    toast("MDN Cleaner sudah versi terbaru.");
-  } catch (error) {
-    toast(String(error));
-  }
-}
-
 function bindShell() {
   $("win-minimize").addEventListener("click", () => appWindow.minimize());
   $("win-maximize").addEventListener("click", () => appWindow.toggleMaximize());
   // With "Jalankan saat Windows menyala" on, the backend turns this into "hide to tray".
   $("win-close").addEventListener("click", () => appWindow.close());
-  $("update-check").addEventListener("click", checkUpdates);
+  $("update-check").addEventListener("click", () => checkForUpdates({ manual: true }));
+  $("footer-badge").addEventListener("click", openUpdate);
   for (const item of document.querySelectorAll("[data-nav]")) {
     item.addEventListener("click", () => navigate(item.dataset.nav));
   }
@@ -113,6 +106,7 @@ async function init() {
   initAbout(version);
   startAnalytics(version);
   setApp(app);
+  initUpdates(version);
 
   navigate("cleaner");
   if (store.app?.settings?.checkCloudOnStart !== false) {

@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "bundle": "node analytics/build.mjs",
+    "set-version": "node scripts/version.mjs",
     "dev": "tauri dev",
     "build": "tauri build",
     "tauri": "tauri"

@@ -9,6 +9,7 @@ export const store = {
   locations: { googleDrive: null, icloudDrive: null }, // CloudStatus
   items: [], // Pembersih scan result
   scanning: false,
+  cleaning: false,
 };
 
 const listeners = new Set();

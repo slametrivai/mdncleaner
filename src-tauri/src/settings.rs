@@ -63,6 +63,8 @@ pub struct Settings {
     pub auto_update_check: bool,
     /// When the last "sampah menumpuk" reminder was shown.
     pub last_reminded_ms: u64,
+    /// When "Cek pembaruan" last reached GitHub.
+    pub last_update_check_ms: u64,
 }
 
 impl Default for Settings {
@@ -85,6 +87,7 @@ impl Default for Settings {
             notify_after_auto: false,
             auto_update_check: true,
             last_reminded_ms: 0,
+            last_update_check_ms: 0,
         }
     }
 }

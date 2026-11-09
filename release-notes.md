@@ -1,0 +1,3 @@
+- Cek pembaruan otomatis dari GitHub, download di latar, lalu pasang dan mulai ulang
+- Pemberitahuan versi baru di bagian atas aplikasi dan di footer
+- Pembaruan bisa dipasang nanti, otomatis saat aplikasi ditutup

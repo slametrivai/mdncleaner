@@ -49,6 +49,9 @@ Jalankan saat Windows menyala (diam di tray), tema terang/gelap/ikuti Windows, k
 
 ![Pengaturan](docs/screenshots/pengaturan.png)
 
+### Pembaruan otomatis
+MDN Cleaner mengecek rilis baru di GitHub saat dibuka dan setiap 6 jam (bisa dimatikan di Pengaturan). Kalau ada versi baru, muncul pemberitahuan di bagian atas dan di footer. Pembaruan diunduh di latar dengan progres yang terlihat, lalu bisa dipasang sekarang (aplikasi ditutup sebentar dan terbuka lagi) atau otomatis saat aplikasi ditutup. Setiap file pembaruan ditandatangani; file yang tanda tangannya tidak cocok ditolak.
+
 ### Tentang
 Klik **Tentang** di pojok kanan bawah untuk melihat versi aplikasi dan info pembuatnya.
 
@@ -91,6 +94,28 @@ npm run dev              # jalankan aplikasi
 npm run build            # buat installer di src-tauri/target/release/bundle/nsis
 ```
 
+## Merilis versi baru
+
+Rilis dibuat otomatis oleh GitHub Actions ([release.yml](.github/workflows/release.yml)) setiap kali tag `v*` di-push. Workflow membuat installer bertanda tangan dan `latest.json` yang dibaca updater di aplikasi.
+
+Sekali saja, tambahkan secrets di **Settings → Secrets and variables → Actions**:
+
+| Secret | Isi |
+|---|---|
+| `TAURI_SIGNING_PRIVATE_KEY` | Isi file `~/.tauri/mdncleaner.key` (jangan pernah di-commit) |
+| `TAURI_SIGNING_PRIVATE_KEY_PASSWORD` | Kosongkan kalau kunci dibuat tanpa password |
+| `FIREBASE_*` | Nilai yang sama dengan `.env` (opsional, untuk analytics) |
+
+Setiap rilis:
+
+```bash
+npm run set-version 1.1.0        # ubah versi di package.json, Cargo.toml, tauri.conf.json
+# tulis perubahan di release-notes.md (muncul di dialog pembaruan)
+git commit -am "Release v1.1.0"
+git tag v1.1.0
+git push --follow-tags
+```
+
 ## Struktur project
 
 ```
@@ -103,13 +128,13 @@ src-tauri/src/       Backend Rust
   cloud.rs           Google Drive dan iCloud Drive
   history.rs         Riwayat dan pemulihan
   schedule.rs        Bersih otomatis (Task Scheduler)
+  updater.rs         Pembaruan otomatis dari GitHub
   settings.rs        Pengaturan, startup, notifikasi
 analytics/           Bundel Firebase Analytics
 ```
 
 ## Belum tersedia
 
-- **Cek pembaruan** belum terhubung ke server pembaruan.
 - Bahasa tampilan baru Bahasa Indonesia.
 - Hanya Windows.
 

@@ -5,6 +5,7 @@ import { $, el, icon, toast } from "../dom.js";
 import { DAY_MS, formatWhen } from "../format.js";
 import { store, setApp, refreshLocation } from "../store.js";
 import { track } from "../analytics.js";
+import { updateRow } from "../update.js";
 
 const SECTIONS = [
   { id: "umum", label: "Umum" },
@@ -42,7 +43,6 @@ const SCHEDULES = [
 
 let version = "1.0.0";
 let active = "umum";
-let updateNote = "Belum pernah dicek.";
 let built = false;
 
 const settings = () => store.app?.settings ?? {};
@@ -198,17 +198,6 @@ function cloudRow(location, name, app) {
   );
 }
 
-async function checkUpdates() {
-  try {
-    await invoke("check_updates");
-    updateNote = `Sudah versi terbaru. Dicek ${formatWhen(Date.now())}.`;
-  } catch (error) {
-    updateNote = String(error);
-    toast(String(error));
-  }
-  render();
-}
-
 async function reset() {
   const ok = await invoke("confirm", {
     title: "Kembalikan ke pengaturan awal?",
@@ -328,7 +317,7 @@ function cards() {
         "Kami kabari kalau ada versi baru. Pemasangan tetap atas izin kamu.",
         toggle("Cek pembaruan otomatis", s.autoUpdateCheck, (v) => save({ autoUpdateCheck: v })),
       ),
-      row(`Versi ${version}`, updateNote, button("refresh", "Cek sekarang", checkUpdates)),
+      updateVersionRow(),
     ),
     el(
       "div",
@@ -342,6 +331,13 @@ function cards() {
       button("rotateCcw", "Reset", reset),
     ),
   ];
+}
+
+function updateVersionRow() {
+  const state = updateRow(formatWhen);
+  const control = button("refresh", state.label, state.action ?? (() => {}));
+  control.disabled = Boolean(state.busy);
+  return row(`Versi ${version}`, state.desc, control);
 }
 
 // ── Layout and scroll-spy ──────────────────────────────────

@@ -10,6 +10,7 @@ mod paths;
 mod schedule;
 mod settings;
 mod state;
+mod updater;
 
 use cleaner::{CleanReport, ItemId, ScanEnv, ScanItem};
 use cloud::{CloudScan, CloudStatus, Location};
@@ -26,7 +27,7 @@ use std::time::Duration;
 use tauri::async_runtime::spawn_blocking;
 use tauri::menu::{Menu, MenuItem};
 use tauri::tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent};
-use tauri::{AppHandle, Manager, State, WindowEvent};
+use tauri::{AppHandle, Manager, RunEvent, State, WindowEvent};
 use tauri_plugin_dialog::{DialogExt, MessageDialogButtons, MessageDialogKind};
 use tauri_plugin_opener::OpenerExt;
 
@@ -181,6 +182,7 @@ fn set_settings(mut settings: Settings, shared: State<'_, Shared>) -> CmdResult<
     let mut s = lock(&shared.app);
     let old = s.settings.clone();
     settings.last_reminded_ms = old.last_reminded_ms;
+    settings.last_update_check_ms = old.last_update_check_ms;
     if settings.start_with_windows != old.start_with_windows {
         settings::set_start_with_windows(settings.start_with_windows)?;
     }
@@ -244,9 +246,37 @@ async fn confirm(title: String, message: String, ok: String, app: AppHandle) -> 
     .await
 }
 
+// ── Pembaruan ───────────────────────────────────────────────
+
+/// None means MDN Cleaner is up to date.
 #[tauri::command]
-fn check_updates() -> CmdResult<bool> {
-    Err("Server pembaruan belum diatur untuk versi ini.".into())
+async fn check_updates(app: AppHandle) -> CmdResult<Option<updater::UpdateInfo>> {
+    let result = updater::check(&app).await?;
+    let shared = app.state::<Shared>();
+    let mut s = lock(&shared.app);
+    s.settings.last_update_check_ms = state::now_ms();
+    let _ = s.save();
+    Ok(result)
+}
+
+#[tauri::command]
+fn download_update(app: AppHandle) -> CmdResult<()> {
+    updater::start_download(&app)
+}
+
+#[tauri::command]
+fn cancel_update(app: AppHandle) {
+    updater::cancel_download(&app);
+}
+
+#[tauri::command]
+fn install_update(app: AppHandle) -> CmdResult<()> {
+    updater::install_now(&app)
+}
+
+#[tauri::command]
+fn install_update_on_exit(enabled: bool, app: AppHandle) {
+    updater::set_install_on_exit(&app, enabled);
 }
 
 // ── Pembersih ───────────────────────────────────────────────
@@ -536,7 +566,9 @@ fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .manage(shared)
+        .manage(updater::UpdateState::default())
         .setup(move |app| {
             build_tray(app)?;
             if !minimized {
@@ -569,6 +601,10 @@ fn main() {
             reset_settings,
             confirm,
             check_updates,
+            download_update,
+            cancel_update,
+            install_update,
+            install_update_on_exit,
             scan,
             clean,
             drives,
@@ -583,6 +619,12 @@ fn main() {
             reveal,
             open_external
         ])
-        .run(tauri::generate_context!())
-        .expect("MDN Cleaner gagal dijalankan");
+        .build(tauri::generate_context!())
+        .expect("MDN Cleaner gagal dijalankan")
+        .run(|app, event| {
+            // "Nanti" on a downloaded update: install it as the app closes.
+            if let RunEvent::Exit = event {
+                updater::install_if_postponed(app);
+            }
+        });
 }

@@ -19,6 +19,10 @@ export function el(tag, props = {}, ...children) {
 const ICONS = {
   check: ["M20 6 9 17l-5-5"],
   chevronDown: ["m6 9 6 6 6-6"],
+  download: ["M12 17V3", "m6 11 6 6 6-6", "M19 21H5"],
+  arrowRight: ["M5 12h14", "m12 5 7 7-7 7"],
+  clock: ["M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", "M12 6v6l4 2"],
+  alert: ["M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", "M12 8v4", "M12 16h.01"],
   x: ["M18 6 6 18", "m6 6 12 12"],
   plus: ["M5 12h14", "M12 5v14"],
   info: ["M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z", "M12 16v-4", "M12 8h.01"],
