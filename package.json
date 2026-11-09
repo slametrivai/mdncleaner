@@ -1,0 +1,18 @@
+{
+  "name": "mdn-cleaner",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "bundle": "node analytics/build.mjs",
+    "dev": "tauri dev",
+    "build": "tauri build",
+    "tauri": "tauri"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.9.0",
+    "esbuild": "^0.28.2"
+  },
+  "dependencies": {
+    "firebase": "^13.2.0"
+  }
+}

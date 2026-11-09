@@ -1,0 +1,42 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "MDN Cleaner",
+  "version": "1.0.0",
+  "identifier": "com.mdn.cleaner",
+  "build": {
+    "frontendDist": "../src",
+    "beforeDevCommand": { "script": "npm run bundle", "wait": true },
+    "beforeBuildCommand": "npm run bundle"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "label": "main",
+        "title": "MDN Cleaner",
+        "width": 1200,
+        "height": 848,
+        "minWidth": 1080,
+        "minHeight": 760,
+        "center": true,
+        "resizable": true,
+        "decorations": false,
+        "shadow": true,
+        "visible": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self'; font-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src ipc: http://ipc.localhost https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com https://firebase.googleapis.com https://firebaseinstallations.googleapis.com"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.ico"
+    ]
+  }
+}

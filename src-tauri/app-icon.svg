@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <rect width="1024" height="1024" rx="224" fill="#1E1B4B"/>
+  <svg x="112" y="277" width="800" height="469" viewBox="4 21 365 214">
+    <g transform="translate(30,0) skewX(-9)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+      <mask id="mdnGap" maskUnits="userSpaceOnUse" x="-60" y="-60" width="520" height="380">
+        <rect x="-60" y="-60" width="520" height="380" fill="#fff"/>
+        <path d="M236,134 V48 L320,208 V48" stroke="#000" stroke-width="56"/>
+      </mask>
+      <path d="M142,48 H176 A80,80 0 0 1 176,208 H142" stroke="#FF6B57" stroke-width="38" mask="url(#mdnGap)"/>
+      <path d="M34,208 V48 L88,140 L142,48 V208" stroke="#FFFFFF" stroke-width="42"/>
+      <path d="M236,134 V48 L320,208 V48" stroke="#FFFFFF" stroke-width="42"/>
+    </g>
+  </svg>
+</svg>
