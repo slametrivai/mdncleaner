@@ -1,3 +1,4 @@
-- Cek pembaruan otomatis dari GitHub, download di latar, lalu pasang dan mulai ulang
-- Pemberitahuan versi baru di bagian atas aplikasi dan di footer
-- Pembaruan bisa dipasang nanti, otomatis saat aplikasi ditutup
+- Rilis pertama MDN Cleaner untuk Windows
+- Bersihkan file sementara, Recycle Bin, cache browser dan aplikasi, serta file duplikat
+- Analisis disk, Riwayat dengan tombol Pulihkan, dan bersih otomatis terjadwal
+- Pembaruan otomatis dari GitHub untuk versi berikutnya
