@@ -49,6 +49,11 @@ Jalankan saat Windows menyala (diam di tray), tema terang/gelap/ikuti Windows, k
 
 ![Pengaturan](docs/screenshots/pengaturan.png)
 
+### Tentang
+Klik **Tentang** di pojok kanan bawah untuk melihat versi aplikasi dan info pembuatnya.
+
+![Tentang](docs/screenshots/tentang.png)
+
 ## Cara memakai
 
 1. Buka **Pembersih**. Aplikasi langsung menganalisis dan menampilkan total sampah.
