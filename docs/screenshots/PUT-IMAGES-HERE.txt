@@ -1,0 +1,9 @@
+Taruh screenshot di folder ini. Nama file yang dipakai README.md:
+
+pembersih.png
+analisis-disk.png
+riwayat.png
+pc-ini.png
+google-drive.png
+icloud-drive.png
+pengaturan.png
